@@ -28,10 +28,10 @@
     }
     .number-grid {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: repeat(18, 1fr);  /* 18 columns */
       gap: 8px;
       justify-items: center;
-      max-width: 50%;
+      max-width: 100%;
     }
     .number {
       padding: 10px;
@@ -50,6 +50,7 @@
     }
     .number.ungenerated {
       background-color: yellow;
+      color: black;  
     }
     .button-container {
       max-width: 40%;
@@ -102,7 +103,7 @@
         align-items: center;
       }
       .number-grid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(6, 1fr); /* For smaller screens, adjust to 6 columns */
         max-width: 100%;
       }
       .button-container {
@@ -125,25 +126,21 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Left Side (Numbers) -->
-    <div class="number-grid">
-      <div id="generated-number"></div>
-      <div id="loading" class="loading" style="display:none;">
+  <div id="loading" class="loading" style="display:none;">
         <div class="spinner"></div>
         Loading...
-      </div>
+  </div>
+  <div class="container">
+    <div class="number-grid">
+      <div id="generated-number"></div>
       <div class="number-grid mb-4"></div>
     </div>
-
-    <!-- Right Side (Buttons) -->
     <div class="button-container">
       <button id="generate-btn" class="btn btn-primary"><i class="fas fa-play"></i> Generate</button>
       <button id="reset-btn" class="btn btn-danger"><i class="fas fa-redo"></i> Reset</button>
       <button id="history-btn" class="btn btn-secondary"><i class="fas fa-history"></i> History</button>
     </div>
   </div>
-
   <footer>
     Developed by Santhosh Podili | <a href="guide.html" style="color: #bbb;">Read the guide to play</a>
   </footer>
