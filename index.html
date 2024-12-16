@@ -48,6 +48,9 @@
       color: white;
       transform: scale(1.1);
     }
+    .number.ungenerated {
+      background-color: yellow;
+    }
     .button-container {
       max-width: 40%;
       text-align: center;
@@ -141,7 +144,9 @@
     </div>
   </div>
 
-  <footer>Developed by Santhosh Podili</footer>
+  <footer>
+    Developed by Santhosh Podili | <a href="guide.html" style="color: #bbb;">Read the guide to play</a>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
@@ -162,7 +167,7 @@
         numberGrid.innerHTML = "";
         allNumbers.forEach((num) => {
           const div = document.createElement("div");
-          div.className = "number";
+          div.className = "number ungenerated";
           div.textContent = num;
           numberGrid.appendChild(div);
         });
@@ -198,7 +203,9 @@
         document.querySelectorAll(".number").forEach((div) => {
           if (generatedNumbers.includes(parseInt(div.textContent))) {
             div.classList.add("clicked");
+            div.classList.remove("ungenerated");
           } else {
+            div.classList.add("ungenerated");
             div.classList.remove("clicked");
           }
         });
