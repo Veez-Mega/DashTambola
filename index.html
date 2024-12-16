@@ -28,7 +28,7 @@
     }
     .number-grid {
       display: grid;
-      grid-template-columns: repeat(18, 1fr);  /* 18 columns */
+      grid-template-columns: repeat(18, 1fr);
       gap: 8px;
       justify-items: center;
       max-width: 100%;
@@ -50,7 +50,7 @@
     }
     .number.ungenerated {
       background-color: yellow;
-      color: black;  
+      color: black;
     }
     .button-container {
       max-width: 40%;
@@ -68,34 +68,23 @@
       font-size: 14px;
       color: #bbb;
     }
-    .loading {
-      text-align: center;
-      font-size: 30px;
-      animation: fadeIn 2s ease-in-out;
-    }
-    .spinner {
-      margin: 20px auto;
-      display: block;
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #3498db;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
     #generated-number {
-      font-size: 40px;
+      font-size: 50px;
       font-weight: bold;
       text-align: center;
       margin-bottom: 20px;
+      color: #fff;
+    }
+    .mute-btn {
+      font-size: 24px;
+      padding: 10px;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+    }
+    .mute-btn:hover {
+      color: #f39c12;
     }
     @media (max-width: 768px) {
       .container {
@@ -103,7 +92,7 @@
         align-items: center;
       }
       .number-grid {
-        grid-template-columns: repeat(6, 1fr); /* For smaller screens, adjust to 6 columns */
+        grid-template-columns: repeat(6, 1fr);
         max-width: 100%;
       }
       .button-container {
@@ -126,21 +115,22 @@
   </style>
 </head>
 <body>
-  <div id="loading" class="loading" style="display:none;">
-        <div class="spinner"></div>
-        Loading...
-  </div>
   <div class="container">
+    <!-- Left Side (Numbers) -->
     <div class="number-grid">
-      <div id="generated-number"></div>
       <div class="number-grid mb-4"></div>
     </div>
+
+    <!-- Right Side (Buttons) -->
     <div class="button-container">
+      <div id="generated-number"></div>
       <button id="generate-btn" class="btn btn-primary"><i class="fas fa-play"></i> Generate</button>
       <button id="reset-btn" class="btn btn-danger"><i class="fas fa-redo"></i> Reset</button>
       <button id="history-btn" class="btn btn-secondary"><i class="fas fa-history"></i> History</button>
+      <button id="mute-btn" class="mute-btn"><i class="fas fa-volume-up"></i></button>
     </div>
   </div>
+
   <footer>
     Developed by Santhosh Podili | <a href="guide.html" style="color: #bbb;">Read the guide to play</a>
   </footer>
@@ -153,12 +143,13 @@
       const generateBtn = document.getElementById("generate-btn");
       const resetBtn = document.getElementById("reset-btn");
       const historyBtn = document.getElementById("history-btn");
-      const historyContainer = document.getElementById("history");
-      const loading = document.getElementById("loading");
       const generatedNumber = document.getElementById("generated-number");
+      const muteBtn = document.getElementById("mute-btn");
 
       let generatedNumbers = [];
       const allNumbers = Array.from({ length: 90 }, (_, i) => i + 1);
+      let isMuted = false;
+      let voice = new SpeechSynthesisUtterance();
 
       function createNumberGrid() {
         numberGrid.innerHTML = "";
@@ -168,7 +159,6 @@
           div.textContent = num;
           numberGrid.appendChild(div);
         });
-        loading.style.display = "none";
       }
 
       function generateNumber() {
@@ -185,6 +175,11 @@
         generatedNumber.textContent = `Generated Number: ${randomNum}`;
         updateGrid();
         updateHistory();
+
+        if (!isMuted) {
+          voice.text = `The generated number is ${randomNum}`;
+          speechSynthesis.speak(voice);
+        }
       }
 
       function resetGame() {
@@ -209,6 +204,7 @@
       }
 
       function updateHistory() {
+        const historyContainer = document.getElementById("history");
         if (generatedNumbers.length === 0) {
           historyContainer.textContent = "No numbers generated yet.";
         } else {
@@ -222,13 +218,10 @@
         alert(`History: ${generatedNumbers.join(" > ") || "No numbers generated yet."}`);
       });
 
-      window.addEventListener("orientationchange", checkOrientation);
-
-      function checkOrientation() {
-        if (window.innerWidth < window.innerHeight) {
-          alert("Please turn your screen to landscape for the best experience.");
-        }
-      }
+      muteBtn.addEventListener("click", () => {
+        isMuted = !isMuted;
+        muteBtn.innerHTML = isMuted ? `<i class="fas fa-volume-mute"></i>` : `<i class="fas fa-volume-up"></i>`;
+      });
 
       createNumberGrid();
     });
